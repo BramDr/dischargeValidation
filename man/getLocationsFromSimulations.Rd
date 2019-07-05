@@ -5,14 +5,14 @@
 \title{Get the location of stations based on the mask of the observation file and the mask of the simulation file(s)}
 \usage{
 getLocationsFromSimulations(obsFile, simFile, simVar = "OUT_DISCHARGE",
-  obsVar = "GRDC_number")
+  obsVar = "area_observed")
 }
 \arguments{
 \item{obsFile}{Path to the observation file.}
 
 \item{simVar}{Simulation variable to be used as mask. If the variable is NA, it is assumed the cell does not contain data. Variable dimensions > 2 only use the first slice of redundand dimensions. Defaults to VIC discharge variable.}
 
-\item{obsVar}{Observation variable to be used as mask. If the variable is NA, it is assumed  the cell does not contain data. Variable dimensions > 2 only use the first slice of redundand dimensions. Defaults to GRDC_number.}
+\item{obsVar}{Observation variable to be used as mask. If the variable is NA, it is assumed  the cell does not contain data. Variable dimensions > 2 only use the first slice of redundand dimensions. Defaults to GRDC number.}
 
 \item{simFiles}{Path to the simulation file.}
 }
@@ -21,4 +21,10 @@ List of station locations containing lon/lat values in a vector.
 }
 \description{
 Get the location of stations based on the mask of the observation file and the mask of the simulation file(s)
+}
+\examples{
+obsFile = "data/obsSampleRhine.nc"
+simFiles = c("data/simSampleRhine.nc")
+
+locations = getLocationsFromSimulations(obsFile = obsFile, simFile = simFiles)
 }

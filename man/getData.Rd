@@ -6,7 +6,7 @@
 \usage{
 getData(obsFile, simFiles, locations, simOrigins = rep("0000-12-30",
   length(simFiles)), simVars = rep("OUT_DISCHARGE", length(simFiles)),
-  simSkips = rep(0, length(simFiles)), obsOrigin = "1900-01-01",
+  simSkips = rep(0, length(simFiles)), obsOrigin = "1806-01-01",
   obsVar = "dis", attVars = "all")
 }
 \arguments{
@@ -33,4 +33,11 @@ An object containing values for nloc, nsim, ntime, time, observations, simulatio
 }
 \description{
 Get validation data object for further analysis
+}
+\examples{
+obsFile = "data/obsSampleRhine.nc"
+simFiles = c("data/simSampleRhine.nc")
+locations = getLocationsFromBoundingBox(obsFile = obsFile, boundingBox = c(6.75,10.25,47.75,51.25))
+
+data = getData(obsFile = obsFile, simFiles = simFiles, location = locations[1:4])
 }

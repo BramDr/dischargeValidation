@@ -8,6 +8,12 @@
 #' @export
 #'
 #' @examples
+#' obsFile = "data/obsSampleRhine.nc"
+#' simFiles = c("data/simSampleRhine.nc")
+#' locations = getLocationsFromBoundingBox(obsFile = obsFile, boundingBox = c(6.75,10.25,47.75,51.25))
+#' data = getData(obsFile = obsFile, simFiles = simFiles, location = locations[1:4])
+#'
+#' data.agg = aggregateData(data)
 aggregateData <- function(data, aggregation = "month", na.rm = TRUE)
 {
   if(!isValidationData(data)){

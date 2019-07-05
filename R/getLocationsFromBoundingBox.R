@@ -8,13 +8,17 @@
 #' @export
 #'
 #' @examples
+#' obsFile = "data/obsSampleRhine.nc"
+#' simFiles = c("data/simSampleRhine.nc")
+#'
+#' locations = getLocationsFromBoundingBox(obsFile = obsFile, boundingBox = c(6.75,10.25,47.75,51.25))
 #' @import ncdf4
 getLocationsFromBoundingBox <- function(obsFile,
                                         boundingBox,
-                                        obsVar = "GRDC_number"){
+                                        obsVar = "area_observed"){
   locations = list()
 
-  # Observation mask
+  ## --- Load observation mask
   nc = nc_open(filename = obsFile)
   for(iVar in 1:nc$nvars){
     if(nc$var[[iVar]]$name == obsVar){
@@ -30,19 +34,20 @@ getLocationsFromBoundingBox <- function(obsFile,
   nc_close(nc)
 
   if(!exists("obsMask")){
-    stop("Could not find the observation mask variable")
+    stop(paste0("Could not find the observation mask variable \"", obsVar,"\""))
     return(locations)
   } else {
     print(paste0("Loaded observation mask (dimensions: ", dim(obsMask)[1], " by ", dim(obsMask)[2], ")"))
   }
 
+  ## --- Find bounding box overlap based on lat/lon boundaries
   for(obsX in 1:dim(obsMask)[1]){
     for(obsY in 1:dim(obsMask)[2]){
       if(!(obsLons[obsX] >= boundingBox[1] && obsLons[obsX] <= boundingBox[2] &&
            obsLats[obsY] >= boundingBox[3] && obsLats[obsY] <= boundingBox[4])){
         next
       }
-      if(is.na(obs.mask[obsX,obsY])){
+      if(is.na(obsMask[obsX,obsY])){
         next
       }
 
@@ -52,5 +57,6 @@ getLocationsFromBoundingBox <- function(obsFile,
 
   print(paste0("Found ", length(locations), " locations"))
 
+  ## --- Return locations
   return(locations)
 }

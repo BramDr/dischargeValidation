@@ -4,7 +4,8 @@
 \alias{getLocationsFromBoundingBox}
 \title{Get the location of stations based on the mask of the observation file and a bounding box}
 \usage{
-getLocationsFromBoundingBox(obsFile, boundingBox, obsVar = "GRDC_number")
+getLocationsFromBoundingBox(obsFile, boundingBox,
+  obsVar = "area_observed")
 }
 \arguments{
 \item{obsFile}{Path to the observation file.}
@@ -18,4 +19,10 @@ List of station locations containing lon/lat values in a vector.
 }
 \description{
 Get the location of stations based on the mask of the observation file and a bounding box
+}
+\examples{
+obsFile = "data/obsSampleRhine.nc"
+simFiles = c("data/simSampleRhine.nc")
+
+locations = getLocationsFromBoundingBox(obsFile = obsFile, boundingBox = c(6.75,10.25,47.75,51.25))
 }

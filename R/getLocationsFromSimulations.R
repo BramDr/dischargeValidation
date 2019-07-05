@@ -3,20 +3,24 @@
 #' @param obsFile Path to the observation file.
 #' @param simFiles Path to the simulation file.
 #' @param simVar Simulation variable to be used as mask. If the variable is NA, it is assumed the cell does not contain data. Variable dimensions > 2 only use the first slice of redundand dimensions. Defaults to VIC discharge variable.
-#' @param obsVar Observation variable to be used as mask. If the variable is NA, it is assumed  the cell does not contain data. Variable dimensions > 2 only use the first slice of redundand dimensions. Defaults to GRDC_number.
+#' @param obsVar Observation variable to be used as mask. If the variable is NA, it is assumed  the cell does not contain data. Variable dimensions > 2 only use the first slice of redundand dimensions. Defaults to GRDC number.
 #'
 #' @return List of station locations containing lon/lat values in a vector.
 #' @export
 #'
 #' @examples
+#' obsFile = "data/obsSampleRhine.nc"
+#' simFiles = c("data/simSampleRhine.nc")
+#'
+#' locations = getLocationsFromSimulations(obsFile = obsFile, simFile = simFiles)
 #' @import ncdf4
 getLocationsFromSimulations <- function(obsFile,
                                         simFile,
                                         simVar = "OUT_DISCHARGE",
-                                        obsVar = "GRDC_number"){
+                                        obsVar = "area_observed"){
   locations = list()
 
-  # Observation mask
+  ## --- Load observation mask
   nc = nc_open(filename = obsFile)
   for(iVar in 1:nc$nvars){
     if(nc$var[[iVar]]$name == obsVar){
@@ -32,12 +36,13 @@ getLocationsFromSimulations <- function(obsFile,
   nc_close(nc)
 
   if(!exists("obsMask")){
-    stop("Could not find the observation mask variable")
+    stop(paste0("Could not find the observation mask variable \"", obsVar,"\""))
     return(locations)
   } else {
     print(paste0("Loaded observation mask (dimensions: ", dim(obsMask)[1], " by ", dim(obsMask)[2], ")"))
   }
 
+  ## --- Load simulation mask
   nc = nc_open(filename = simFile)
   for(iVar in 1:nc$nvars){
     if(nc$var[[iVar]]$name == simVar){
@@ -52,12 +57,13 @@ getLocationsFromSimulations <- function(obsFile,
   nc_close(nc)
 
   if(!exists("simMask")){
-    stop("Could not find the simulation mask variable")
+    stop(paste0("Could not find the simulation mask variable \"", simVar,"\""))
     return(locations)
   } else {
     print(paste0("Loaded simulation mask (dimensions: ", dim(simMask)[1], " by ", dim(simMask)[2], ")"))
   }
 
+  ## --- Find mask overlap based on lat/lon combinations
   for(obsX in 1:dim(obsMask)[1]){
     for(obsY in 1:dim(obsMask)[2]){
       if(! (obsLons[obsX] %in% simLons && obsLats[obsY] %in% simLats)){
@@ -81,5 +87,6 @@ getLocationsFromSimulations <- function(obsFile,
 
   print(paste0("Found ", length(locations), " locations"))
 
+  ## --- Return locations
   return(locations)
 }

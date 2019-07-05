@@ -46,7 +46,7 @@ getTime <- function(obsFile,
     timeEnd = min(timeEnd, endSimTime)
   }
 
-  time = seq(from = timeStart, to = timeEnd, by = "day")
+  time = seq.Date(from = timeStart, to = timeEnd, by = "day")
 
   print(paste0("Loaded timeframe from ", timeStart, " to ", timeEnd))
   return(time)
