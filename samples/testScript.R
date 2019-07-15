@@ -2,8 +2,8 @@ library(dischargeValidation)
 
 rm(list = ls())
 
-obsFile = "data/obsSampleRhine.nc"
-simFiles = c("data/simSampleRhine.nc")
+obsFile = system.file("data", "obsSampleRhine.nc", package = "dischargeValidation", mustWork = T)
+simFiles = system.file("data", "simSampleRhine.nc", package = "dischargeValidation", mustWork = T)
 
 locations = getLocationsFromSimulations(obsFile = obsFile,
                                         simFile = simFiles)
