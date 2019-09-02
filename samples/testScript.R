@@ -12,7 +12,7 @@ locations = getLocationsFromBoundingBox(obsFile = obsFile,
 
 data = getData(obsFile = obsFile,
               simFiles = simFiles,
-              location = locations[1:4])
+              location = locations[1:4], simSkips = 13)
 isValidationData(data)
 
 data.agg = aggregateData(data)

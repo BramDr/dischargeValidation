@@ -3,7 +3,7 @@ getAttributes <- function(file,
                           variables)
 {
   # Initialize
-  attributes = array(data = NA, dim = c(length(variables)))
+  attributes = list()
   lon = location[1]
   lat = location[2]
 
@@ -38,10 +38,10 @@ getAttributes <- function(file,
 
     nc_close(nc)
 
-    attributes[iVar] = c(value)
+    attributes[[variable]] = value
   }
 
-  print(paste0("Loaded ", length(attributes), " attributes (", paste0(variables, collapse = ", "), ")"))
+  print(paste0("Loaded ", length(attributes), " attributes (", paste0(names(attributes), collapse = ", "), ")"))
 
   return(attributes)
 }

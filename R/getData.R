@@ -63,13 +63,13 @@ getData <- function(obsFile,
 
   observations = array(data = NA, dim = c(nloc, ntime))
   simulations = array(data = NA, dim = c(nloc, nsim, ntime))
-  attributes.array = array(data = NA, dim = c(nloc, natt))
+  attributes.list = list()
 
   # Set values
   for (iLoc in 1:nloc) {
     location = locations[[iLoc]]
     print(paste0("Location: ",
-                 location[1], " N ", location[2], " E ",
+                 location[2], " N ", location[1], " E ",
                  "(", iLoc, " of ", length(locations), ")"))
 
     # Load observation data
@@ -93,17 +93,25 @@ getData <- function(obsFile,
     }
 
     # Load attribute data
-    attributes.array[iLoc,1:natt] = getAttributes(file = obsFile,
+    attributes.list[[iLoc]] = getAttributes(file = obsFile,
                                                    location = location,
                                                    variable = attVars)
   }
 
+  # Convert attributes
   attributes = list()
-  for(iAtt in 1:natt){
+  for (iAtt in 1:natt){
     attVar = attVars[iAtt]
-    attributes[[attVar]] = array(data = attributes.array[,iAtt], dim = c(nloc))
+    for (iLoc in 1:nloc){
+      value = unlist(attributes.list[[iLoc]][[attVar]], use.names = F)
+
+      if(iLoc == 1){
+        attributes[[attVar]] = value
+      } else {
+        attributes[[attVar]] = c(attributes[[attVar]], value)
+      }
+    }
   }
-  names(attributes) = attVars
 
   ## Create object
   datum = list(nloc = nloc,

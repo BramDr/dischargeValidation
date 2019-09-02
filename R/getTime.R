@@ -33,10 +33,11 @@ getTime <- function(obsFile,
     startSimMonth = as.numeric(format(startSimTime, "%m"))
     startSimDay = as.numeric(format(startSimTime, "%d"))
 
+    # TODO: skip multiple years
     startSimMonth = startSimMonth + simSkip
     if(startSimMonth > 12){
-      startSimYear = startSimYear + 1
-      startSimMonth = startSimMonth - 12
+      startSimYear = startSimYear + floor(startSimMonth / 12)
+      startSimMonth = ((startSimMonth - 1) %% 12) + 1
     }
 
     startSimTime = as.Date(paste0(startSimYear, "-", startSimMonth, "-", startSimDay))
